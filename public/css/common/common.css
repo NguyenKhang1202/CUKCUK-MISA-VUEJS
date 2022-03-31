@@ -1,0 +1,19 @@
+.text-align-center {
+    text-align: center !important;
+}
+
+.text-align-left {
+    text-align: left !important;
+}
+
+.text-align-right {
+    text-align: right !important;
+}
+
+.open {
+    display: block !important;
+}
+
+.requiredVal {
+    border: 1px solid red !important;
+}
