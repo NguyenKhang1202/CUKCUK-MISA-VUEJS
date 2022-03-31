@@ -76,15 +76,14 @@
             <div class="element">
               <div class="between-element-title">Giới tính</div>
               <div class="between-element-box">
-                
                 <!-- items : dữ liệu để build combobox -->
                 <!-- employeeForm : truyền toàn bộ dữ liệu form sang combobox để bind combobox -->
                 <!-- bindDataForm : sự kiện khi thay đổi lựa chọn trên combobox sẽ gửi lại dữ liệu lên form để gửi lên server -->
-                <combobox-component 
+                <combobox-component
                   :items="genders"
                   @bindDataForm="bindDataForm"
-                  v-bind:employeeForm="employeeForm"
-                  />
+                  v-bind:employeeForm="employeeForm.Gender"
+                />
               </div>
             </div>
           </div>
@@ -149,29 +148,27 @@
               <div class="element">
                 <div class="between-element-title">Vị trí</div>
                 <div class="between-element-box">
-
                   <!-- items : dữ liệu để build combobox -->
                   <!-- employeeForm : truyền toàn bộ dữ liệu form sang combobox để bind combobox -->
                   <!-- bindDataForm : sự kiện khi thay đổi lựa chọn trên combobox sẽ gửi lại dữ liệu lên form để gửi lên server -->
-                  <combobox-component 
+                  <combobox-component
                     :items="positions"
                     @bindDataForm="bindDataForm"
-                    v-bind:employeeForm="employeeForm"
-                     />
+                    v-bind:employeeForm="employeeForm.PositionId"
+                  />
                 </div>
               </div>
               <div class="element">
                 <div class="between-element-title">Phòng ban</div>
                 <div class="between-element-box">
-
                   <!-- items : dữ liệu để build combobox -->
                   <!-- employeeForm : truyền toàn bộ dữ liệu form sang combobox để bind combobox -->
                   <!-- bindDataForm : sự kiện khi thay đổi lựa chọn trên combobox sẽ gửi lại dữ liệu lên form để gửi lên server -->
-                  <combobox-component 
+                  <combobox-component
                     :items="departments"
-                    @bindDataForm="bindDataForm"  
-                    v-bind:employeeForm="employeeForm"
-                    />
+                    @bindDataForm="bindDataForm"
+                    v-bind:employeeForm="employeeForm.DepartmentId"
+                  />
                 </div>
               </div>
             </div>
@@ -207,17 +204,18 @@
               <div class="element">
                 <div class="between-element-title">Tình trạng công việc</div>
                 <div class="between-element-box">
-                  <select class="select" name="" id="">
-                    <option value="0">Đang làm việc</option>
-                    <option value="1">Đã nghỉ việc</option>
-                    <option value="2">Khác</option>
-                  </select>
+                  <combobox-component
+                    :items="workStatus"
+                    @bindDataForm="bindDataForm"
+                    v-bind:employeeForm="employeeForm.WorkStatusId"
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
       <!-- end form -->
 
       <div class="dialog-content-footer">
@@ -245,12 +243,12 @@
 </template>
 
 <script>
-// import { computed } from "vue";
 import CommonFn from "../../js/Common/Common.js";
 import Resource from "../../js/Common/Resource";
 import Constant from "../../js/Common/Constant";
+import Combobox from "../../js/Components/Combobox";
 import Enumeration from "../../js/Common/Enumeration";
-import ComboboxComponent from "../../components/base/Combobox.vue"
+import ComboboxComponent from "../../components/base/Combobox.vue";
 
 export default {
   name: "EmployeeDetail",
@@ -258,11 +256,6 @@ export default {
     ComboboxComponent,
   },
 
-  // provide() {
-  //   return {
-  //     employeeForm: this.employee,
-  //   }
-  // },
   // Là các giá trị nhận được từ Employee
   props: {
     // ẩn hiện form
@@ -287,47 +280,19 @@ export default {
   data() {
     return {
       // Là dữ liệu trên Form
-      employeeForm: {type: Object, default: {}},
+      employeeForm: { type: Object, default: {} },
 
       // Kết quả validate
       isValid: true,
 
-      departments : {
-        data: [
-          { id: "11452b0c-768e-5ff7-0d63-eeb1d8ed8cef", name: "Phòng Công nghệ thông tin"  },
-          { id: "142cb08f-7c31-21fa-8e90-67245e8b283e", name: "Phòng Sản xuất" },
-          { id: "17120d02-6ab5-3e43-18cb-66948daf6128",name: "Phòng Đào tạo" },
-          { id: "469b3ece-744a-45d5-957d-e8c757976496", name: "Phòng Nhân sự" },
-          { id: "4e272fc4-7875-78d6-7d32-6a1673ffca7c", name: "Phòng Tuyển dụng"  },
-          ],
-        placeholder: "Tất cả phòng ban",
-        FieldName: "Department",
-        NameId: "DepartmentId",
-        Parent: "EmployeeDetail",
-      },
+      // Lấy dữ liệu từ server và build combobox
+      departments: Combobox.getDepartment("EmployeeDetail"),
 
-      positions: {
-        data: [
-          { id: "0",name: "Nhân viên" },
-          { id: "1", name: "Giám đốc" },
-          { id: "2", name: "Khác"  },
-        ],
-        placeholder: "Tất cả vị trí",
-        FieldName: "Position",
-        NameId: "PositionId",
-        Parent: "EmployeeDetail",
-      },
-      genders: {
-        data: [
-          { id: "0",name: "Nữ" },
-          { id: "1", name: "Nam" },
-          { id: "2", name: "Khác"  },
-        ],
-        placeholder: "Giới tính",
-        FieldName: "Gender",
-        NameId: "Gender",
-        Parent: "EmployeeDetail",
-      }
+      positions: Combobox.getPosition("EmployeeDetail"),
+
+      genders: Combobox.getGender("EmployeeDetail"),
+
+      workStatus: "",
     };
   },
 
@@ -340,8 +305,10 @@ export default {
     employee: function (employeeEdit) {
       let me = this;
       me.employeeForm = employeeEdit;
-      me.employeeForm.DateOfBirth = CommonFn.convertDate(employeeEdit.DateOfBirth);
-      console.log(me.employeeForm)
+      me.employeeForm.DateOfBirth = CommonFn.convertDate(
+        employeeEdit.DateOfBirth
+      );
+      console.log(me.employeeForm);
     },
 
     /* 
@@ -351,12 +318,12 @@ export default {
       let me = this;
       if (me.isShow == true && me.formMode == Enumeration.FormMode.Add) {
         let url = Constant.urlNewEmployeeCode,
-            method = Resource.Method.Get,
-            data = {};
+          method = Resource.Method.Get,
+          data = {};
         // reset form
         me.employeeForm = {};
         try {
-          CommonFn.Axios(method, url, data, function (response){
+          CommonFn.Axios(method, url, data, function (response) {
             // gán EmployeeCode lên form (khi thêm mới)
             me.employeeForm.EmployeeCode = response.data;
           });
@@ -379,13 +346,13 @@ export default {
         Sự kiện click Save button
     */
     handleSave() {
-        let me = this;
-        me.$emit("handleSave", me.employeeForm);
+      let me = this;
+      me.$emit("handleSave", me.employeeForm);
     },
 
-    bindDataForm({fieldName, item}){
+    bindDataForm({ fieldName, item }) {
       let me = this;
-      switch(fieldName){
+      switch (fieldName) {
         case "Department":
           me.employeeForm.DepartmentId = item.id;
           break;
@@ -395,7 +362,7 @@ export default {
         case "Position":
           me.employeeForm.PositionId = item.id;
           break;
-        }
+      }
     },
     // isDateFormat(date){
     //     let regex = new RegExp("([0-9]{4}[-](0[1-9]|1[0-2])[-]([0-2]{1}[0-9]{1}|3[0-1]{1})|([0-2]{1}[0-9]{1}|3[0-1]{1})[-](0[1-9]|1[0-2])[-][0-9]{4})");
@@ -411,7 +378,7 @@ export default {
     //     }
     // },
 
-    // // Validate form 
+    // // Validate form
     // validateForm(){
     //     let me = this,
     //         isValid = me.validateRequire(); // Validate các trường bắt buộc nhập
@@ -444,7 +411,7 @@ export default {
     //     let elements = document.querySelectorAll("[Require='true']");
     //         elements.forEach(element => {
     //             let value = element.value;
-    
+
     //             if(!value){
     //                 isValid = false;
     //                 element.classList.add("notValidControl");
@@ -452,7 +419,7 @@ export default {
     //                 // element.attr("title", "Vui lòng không được để trống!");
     //             }else{
     //                 element.classList.remove("notValidControl");
-                    
+
     //             }
     //         })
     //     return isValid;
@@ -466,7 +433,7 @@ export default {
     //     let elements = document.querySelectorAll("[DataType='Number']");
     //         elements.forEach(element => {
     //             let value = element.value;
-    
+
     //             if(!isNaN(value)){
     //                 isValid = false;
     //                 element.classList.add("notValidControl");
@@ -487,7 +454,7 @@ export default {
     //     let elements = document.querySelectorAll("[DataType='Date']");
     //         elements.forEach(element => {
     //             let value = element.value;
-    
+
     //             if(!me.isDateFormat(value)){
     //                 isValid = false;
     //                 element.classList.add("notValidControl");
@@ -505,7 +472,7 @@ export default {
     //     isValid = true;
     //     // Duyệt hết các trường require xem có trường nào bắt buộc mà ko có value ko
     //     let elements = document.querySelectorAll("[DataType='Email']");
-        
+
     //     elements.forEach(element => {
     //         let value = element.val();
 
@@ -539,7 +506,6 @@ export default {
     //     // });
     //     return true;
     // }
-
   },
 };
 </script>

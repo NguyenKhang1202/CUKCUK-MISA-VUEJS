@@ -150,10 +150,12 @@ import TheLoading from "../../components/base/TheLoading.vue";
 import TheDialog from "../TheDialog.vue";
 import TheToastMessage from "../ToastMessage.vue";
 import CommonFn from "../../js/Common/Common.js";
+import Combobox from "../../js/Components/Combobox.js";
 import Resource from "../../js/Common/Resource";
 import Constant from "../../js/Common/Constant";
 import Enumeration from "../../js/Common/Enumeration";
 import ComboboxComponent from "../../components/base/Combobox.vue"
+
 
 export default {
   name: "TheEmployee",
@@ -190,29 +192,12 @@ export default {
         message: { type: String, default: "" },
       },
 
-      departments : {
-        data: [
-          { id: "11452b0c-768e-5ff7-0d63-eeb1d8ed8cef", name: "Phòng Công nghệ thông tin"  },
-          { id: "142cb08f-7c31-21fa-8e90-67245e8b283e", name: "Phòng Sản xuất" },
-          { id: "17120d02-6ab5-3e43-18cb-66948daf6128",name: "Phòng Đào tạo" },
-          { id: "469b3ece-744a-45d5-957d-e8c757976496", name: "Phòng Nhân sự" },
-          { id: "4e272fc4-7875-78d6-7d32-6a1673ffca7c", name: "Phòng Tuyển dụng"  },
-          ],
-        placeholder: "Tất cả phòng ban",
-        FieldName: "Department",
-        Parent: "Employee",
-      },
+      // Lấy dữ liệu từ server và build combobox
+      departments: Combobox.getDepartment("Employee"),
 
-      positions: {
-        data: [
-          { id: "0",name: "Nhân viên" },
-          { id: "1", name: "Giám đốc" },
-          { id: "2", name: "Khác"  },
-        ],
-        placeholder: "Tất cả vị trí",
-        FieldName: "Position",
-        Parent: "Employee",
-      }
+      positions: Combobox.getPosition("Employee"),
+
+      genders: Combobox.getGender("Employee"),
     };
   },
 
@@ -221,7 +206,8 @@ export default {
     convertDate: CommonFn.convertDate,
     getValueEnum: CommonFn.getValueEnum,
     formatMoney: CommonFn.formatMoney,
-
+    getDataCombobox: Combobox.getData,
+    
     // Sự kiện click button Thêm nhân viên
     onClickAddEmployee() {
       let me = this;
@@ -306,6 +292,7 @@ export default {
 
           // Hiển thị Toast message 
           me.showToast(message);
+
         } 
       });
           
@@ -368,9 +355,7 @@ export default {
       CommonFn.Axios(method, url, data, function (response) {
         // load dữ liệu vào bảng
         me.employees = response.data;
-        console.log(response.data)
       });
-        
       me.employeeSelected = {};
       setTimeout(() => {
         me.isShowLoading = false;
