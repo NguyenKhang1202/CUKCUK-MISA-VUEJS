@@ -12,6 +12,7 @@
 
 .open {
     display: block !important;
+    transition: all 1s ease;
 }
 
 .requiredVal {

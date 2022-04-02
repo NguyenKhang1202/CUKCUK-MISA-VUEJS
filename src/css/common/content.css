@@ -135,6 +135,25 @@
             cursor: pointer;
         }
 
+        .filter-right .btn-edit {
+            font-size: 16px;
+            padding: 11px;
+            border-radius: 4px;
+            border: 1px solid #BBBBBB;
+            width: 42px;
+            height: 40px;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: #718ad4;
+            background-color: white;
+            margin-right: 12px;
+        }
+
+        .filter-right .btn-edit:hover {
+            background-color: #EEEEEE;
+            cursor: pointer;
+        }
+
 .content .content-table{
     height: calc(100vh - 200px);
     padding-right: 16px;

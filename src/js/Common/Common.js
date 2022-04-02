@@ -6,6 +6,8 @@ import Resource from "./Resource.js";
 // Các hàm dùng chung toàn chương trình
 var CommonFn = CommonFn || {};
 
+CommonFn.devMsg = "";
+
 // Hàm format số tiền
 CommonFn.formatMoney = money => {
     if(money && !isNaN(money)){
@@ -68,6 +70,7 @@ CommonFn.IsEmailFormat = (email) => {
 
 // Hàm axios gọi lên server lấy dữ liệu
 CommonFn.Axios = (method,url,data, fnCallBack) => {
+    CommonFn.devMsg = "";
     try {
         axios({
             method: method,
@@ -85,6 +88,7 @@ CommonFn.Axios = (method,url,data, fnCallBack) => {
         console.log("Xảy ra lỗi tại Axios");
         console.log(error);
     }
+    console.log(CommonFn.devMsg);
 }
 
 export default CommonFn;

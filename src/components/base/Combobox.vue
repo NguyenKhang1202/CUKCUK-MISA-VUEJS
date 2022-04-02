@@ -5,7 +5,11 @@
     :FieldName="items.FieldName"
     :Parent="items.Parent"
   >
-    <input type="text" class="m-input" :placeholder="items.placeholder" v-model="value"/>
+    <input type="text" class="m-input" 
+      :placeholder="items.placeholder" 
+      v-model="value" 
+      :Require="Require"
+      />
     <button class="m-combobox-button"
         @click="onClickArrow"
         ></button>
@@ -26,7 +30,7 @@ export default {
   name: "ComboboxComponent",
   // items : dữ liệu để xây dựng lên combobox, VD : departments, genders,...
   // employeeForm : là dữ liệu nhận được từ form (giá trị id)
-  props: ["items", "employeeForm"],
+  props: ["items", "employeeForm","Require"],
   data() {
     return {
       itemSelected: {},

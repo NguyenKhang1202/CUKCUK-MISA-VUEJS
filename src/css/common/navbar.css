@@ -1,5 +1,5 @@
 .nav-bar {
-    background-color: #ffffff;
+    background-color: #E7E9EB;
     width: 226px;
     float: left;
     height: 100vh;
@@ -34,12 +34,12 @@
         .navbar-box .menu-item {
             display: flex;
             height : 48px;
-            padding-left: 16px;
             align-items: center;
         }
         .navbar-box .menu-item:hover {
-            background-color: #e5e5e5;
+            background-color: #CCCCCC;
             cursor: pointer;
+            transition: all 0.1s ease;
         }
             .menu-item .menu-item-icon {
                 background-size: contain;
@@ -48,3 +48,12 @@
                 width: 20px;
                 margin-right: 10px;
             }
+
+            .margin-menu-item {
+                width: 10px;
+                height : 48px;
+                margin-right: 6px;
+            }
+            /* .menu-item:hover .margin-menu-item {
+                background-color: #5F9F53;
+            } */
