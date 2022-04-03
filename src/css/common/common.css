@@ -10,10 +10,7 @@
     text-align: right !important;
 }
 
-.open {
-    display: block !important;
-    transition: all 1s ease;
-}
+
 
 .requiredVal {
     border: 1px solid red !important;

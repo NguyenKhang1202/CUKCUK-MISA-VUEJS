@@ -1,3 +1,31 @@
+<template>
+    <div id="toastBox" class="toast-box toast-success" v-show="isShowToast">
+            <div class="toast-msg-item">
+                <div class="toast-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="toast-text">{{ message }}</div>
+                <div class="toast-close" @click="handleCloseToast"><i class="fas fa-times"></i></div>
+            </div>
+        </div>
+</template>
+
+<script>
+export default {
+    name: "TheToastMessage",
+    props: ["isShowToast","message"],
+    data(){
+        return{
+            
+        }
+    },
+    methods: {
+        handleCloseToast(){
+            this.$emit('handleCloseToast');
+        }
+    }
+}
+</script>
+
+<style scoped>
 .toast-box {
     position: fixed;
     right: 16px;
@@ -54,3 +82,4 @@
 .toast-info .toast-close {
     color: #4388D9;
 }
+</style>

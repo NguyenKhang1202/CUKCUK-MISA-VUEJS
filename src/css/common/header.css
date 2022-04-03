@@ -1,7 +1,7 @@
 @import url(../components/font.css);
 
 .header {
-    background-color: #ffffff;
+    background-color: white;
     float: left;
     width: calc(100% - 226px);
     height: 48px;

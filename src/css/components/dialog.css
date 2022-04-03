@@ -1,18 +1,17 @@
 /* Form Add Employee */
 
 .dialog {
-  display: none;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.24);
+  opacity: 0;
+  z-index: 10;
 }
-.dialog .modal {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: black;
-    opacity: 0.5;
-    z-index: 1000;
-  }
   .dialog .dialog-content {
     width: 650px;
     height: 700px;
@@ -23,7 +22,7 @@
     background-color: white;
     border-radius: 4px;
     transform: translate(-50%, -50%);
-    z-index: 1001;
+    z-index: 11;
   }
   
   
@@ -110,4 +109,9 @@
   }
   .dialog .dialog-content .dialog-content-left .input-image-title {
     text-align: center;
+  }
+
+  .dialog.open {
+    visibility: visible;
+    opacity: 1;
   }

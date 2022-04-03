@@ -1,5 +1,6 @@
 <template>
-  <the-employee></the-employee>
+  <!-- <the-employee></the-employee> -->
+  <router-view />
 </template>
 
 <style>
@@ -8,6 +9,7 @@
 
 
 <script>
+/* eslint-disable */
 import TheEmployee from '../../views/Employee/Employee.vue'
 
 export default {

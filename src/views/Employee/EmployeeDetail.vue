@@ -2,11 +2,10 @@
   <!-- modal -->
   <div
     id="formEmployeeDetail"
-    hidden
     class="dialog formDetail"
     v-bind:class="{ open: isShow }"
   >
-    <div id="modal" class="modal"></div>
+    <!-- <div id="modal" class="modal"></div> -->
     <div class="dialog-content">
       <!-- <form action=""> -->
 
@@ -530,7 +529,5 @@ export default {
 };
 </script>
 <style>
-.open {
-  display: block;
-}
+
 </style>

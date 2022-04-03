@@ -1,5 +1,5 @@
 <template>
-    <div id="dialogConfirmDelete" MISADialog class="m-dialog-box"  v-bind:class="{ visible: isShowDialog }">
+    <div id="dialogConfirmDelete" MISADialog class="m-dialog-box" v-bind:class="{ visible: isShowDialog }">
         <div class="m-dialog">
             <div class="m-dialog-close"></div>
             <div class="m-dialog-header">{{title}}</div>

@@ -50,7 +50,10 @@
           <span class="tooltiptext">Xóa</span>
         </button>
 
-        <button id="btnRefresh" class="m-btn-bg refresh-icon btn-refresh tooltip">
+        <button
+          id="btnRefresh"
+          class="m-btn-bg refresh-icon btn-refresh tooltip"
+        >
           <span class="tooltiptext refresh-text">Làm mới</span>
         </button>
       </div>
@@ -61,7 +64,12 @@
       <table id="tableEmployee" class="table">
         <thead>
           <tr>
-            <th><input type="checkbox" value="" /></th>
+            <!-- <th><input type="checkbox" value="" /></th> -->
+            <th style="padding-right: 0">
+              <div ref="checkbox" class="m-checkbox">
+                <i class="fas fa-check"></i>
+              </div>
+            </th>
             <th fieldName="EmployeeCode">Mã nhân viên</th>
             <th fieldName="EmployeeName" colspan="1">Họ và tên</th>
             <th style="width: 50px" fieldName="Gender">Giới tính</th>
@@ -89,7 +97,16 @@
               v-for="employee in employees"
               :key="employee.EmployeeId"
             >
-              <td><input type="checkbox" value="" /></td>
+              <!-- <td><input type="checkbox" value="" /></td> -->
+              <td>
+                <div ref="checkbox" class="m-checkbox" 
+                  v-bind:class="{
+                    checked:
+                      this.employeeSelected.EmployeeId == employee.EmployeeId,
+                  }">
+                  <i class="fas fa-check"></i>
+                </div>
+              </td>
               <td>{{ employee.EmployeeCode }}</td>
               <td colspan="1">{{ employee.EmployeeName }}</td>
               <td style="width: 50px">
@@ -161,10 +178,11 @@
 </template>
 
 <script>
+/* eslint-disable */
 import EmployeeDetail from "./EmployeeDetail.vue";
 import TheLoading from "../../components/base/TheLoading.vue";
-import TheDialog from "../TheDialog.vue";
-import TheToastMessage from "../ToastMessage.vue";
+import TheDialog from "../../components/base/TheDialog.vue";
+import TheToastMessage from "../../components/base/ToastMessage.vue";
 import CommonFn from "../../js/Common/Common.js";
 import Combobox from "../../js/Components/Combobox.js";
 import Dialog from "../../js/Components/Dialog.js";
@@ -172,6 +190,7 @@ import Resource from "../../js/Common/Resource";
 import Constant from "../../js/Common/Constant";
 import Enumeration from "../../js/Common/Enumeration";
 import ComboboxComponent from "../../components/base/Combobox.vue";
+import $ from 'jquery'
 
 export default {
   name: "TheEmployee",
@@ -249,14 +268,19 @@ export default {
 
     // Khởi tạo sự kiện click vào 1 row (table)
     onClickRow(event, employeeSelected) {
-      let inputs = document.querySelectorAll("input[type=checkbox]");
-      inputs.forEach(function (input) {
-        input.checked = false;
-      });
-      event.target.parentElement.getElementsByTagName(
-        "input"
-      )[0].checked = true;
-
+      // let inputs = document.querySelectorAll("input[type=checkbox]");
+      // inputs.forEach(function (input) {
+      //   input.checked = false;
+      // });
+      // event.target.parentElement.getElementsByTagName(
+      //   "input"
+      // )[0].checked = true;
+      // let tr = $('tbody tr .m-checkbox');
+      // $.each(tr, (item) => {
+      //   if($(item).hasClass('checked')){
+      //     $(item).removeClass('checked');
+      //   }
+      // })
       let me = this;
       me.employeeSelected = employeeSelected;
     },
@@ -276,7 +300,7 @@ export default {
       if (me.employeeSelected.EmployeeCode != undefined) {
         me.dialog = {
           isShowDialog: true,
-          employeeCode: me.employeeSelected.EmployeeCode+'?',
+          employeeCode: me.employeeSelected.EmployeeCode + "?",
           title: Dialog.Delete.title,
           message: Dialog.Delete.message,
           isShowBtnCancel: true,
@@ -416,6 +440,17 @@ export default {
         me.isShowLoading = false;
       }, 300);
     },
+
+    // Sự kiện click vào 1 ô checkbox
+    checkboxOnClick(trSelected){
+      let tr = $('tbody tr .m-checkbox');
+      $.each(tr, (item) => {
+        if($(item).hasClass('checked')){
+          $(item).removeClass('checked');
+        }
+      })
+      $(trSelected).addClass('checked');
+    },
   },
 
   /* 
@@ -437,21 +472,25 @@ export default {
 .align-right {
   text-align: right;
 }
-#btnDelete.disabled,#btnEdit.disabled,
+#btnDelete.disabled,
+#btnEdit.disabled,
 .disabled:hover {
   background-color: #eeeeee;
   cursor: context-menu;
 }
 
-#btnDelete.able , #btnEdit.able{
+#btnDelete.able,
+#btnEdit.able {
   background-color: white;
   cursor: pointer;
 }
 
-#btnDelete.able:hover,#btnEdit.able:hover {
+#btnDelete.able:hover,
+#btnEdit.able:hover {
   background-color: #eeeeee;
 }
-#btnDelete,#btnEdit {
+#btnDelete,
+#btnEdit {
   position: relative;
 }
 
