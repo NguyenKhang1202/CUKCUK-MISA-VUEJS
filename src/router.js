@@ -3,7 +3,6 @@ import TheEmployee from "./views/Employee/Employee.vue"
 import TheCustomer from "./views/Customer/Customer.vue"
 import TheReport from "./views/Report/Report.vue"
 import TheSetting from "./views/Setting/Setting.vue"
-
 import HomePage from "./views/HomePage.vue"
 
 const routes = [

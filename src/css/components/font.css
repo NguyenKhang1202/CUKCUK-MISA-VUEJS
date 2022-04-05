@@ -27,3 +27,7 @@
     font-family: GoogleSans-BoldItalic;
     src: url(../../assets/font/GoogleSans-BoldItalic.otf);
 }
+@font-face {
+    font-family: Roboto-Regular;
+    src: url(../../assets/font/Roboto-Regular.ttf);
+}

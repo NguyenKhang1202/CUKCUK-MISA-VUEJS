@@ -9,6 +9,8 @@
       :placeholder="items.placeholder" 
       v-model="value" 
       :Require="Require"
+      :tabindex="tabindex"
+      @blur="handleBlur"
       />
     <button class="m-combobox-button"
         @click="onClickArrow"
@@ -30,7 +32,7 @@ export default {
   name: "ComboboxComponent",
   // items : dữ liệu để xây dựng lên combobox, VD : departments, genders,...
   // employeeForm : là dữ liệu nhận được từ form (giá trị id)
-  props: ["items", "employeeForm","Require"],
+  props: ["items", "employeeForm","Require","tabindex"],
   data() {
     return {
       itemSelected: {},
@@ -87,6 +89,10 @@ export default {
           }
         });
         return "";
+      },
+
+      handleBlur(e){
+        this.$emit("handleBlur",e);
       }
   },
   watch: { 

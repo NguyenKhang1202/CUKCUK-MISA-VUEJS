@@ -5,10 +5,8 @@
     class="dialog formDetail"
     v-bind:class="{ open: isShow }"
   >
-    <!-- <div id="modal" class="modal"></div> -->
     <div class="dialog-content">
-      <!-- <form action=""> -->
-
+      
       <!-- cập nhật ảnh  -->
       <div class="dialog-content-header">THÔNG TIN NHÂN VIÊN</div>
       <div class="dialog-content-left">
@@ -43,6 +41,7 @@
                 FieldName="EmployeeCode"
                 autofocus
                 Require="true"
+                @blur="handleBlur"
               />
             </div>
             <div class="element">
@@ -57,7 +56,8 @@
                 class="input-dialog-employee"
                 FieldName="EmployeeName"
                 Require="true"
-              />
+                @blur="handleBlur"
+              />  
             </div>
           </div>
           <div class="content-between-element">
@@ -73,6 +73,7 @@
                 class="input-dialog-employee"
                 DataType="Date"
                 Require="true"
+                @blur="handleBlur"
               />
             </div>
             <div class="element">
@@ -85,6 +86,7 @@
                   :items="genders"
                   @bindDataForm="bindDataForm"
                   v-bind:employeeForm="employeeForm.Gender"
+                  tabindex=""
                 />
               </div>
             </div>
@@ -103,6 +105,7 @@
                 id="cmt-date"
                 name="cmt-date"
                 class="input-dialog-employee"
+                tabindex=""
               />
             </div>
           </div>
@@ -125,7 +128,8 @@
                 class="input-dialog-employee"
                 DataType="Email"
                 FieldName="Email"
-                Require="false"
+                Require="true"
+                @blur="handleBlur"
               />
             </div>
             <div class="element">
@@ -134,11 +138,14 @@
               </div>
               <input
                 id="txtPhoneNumber"
-                tabindex="5"
+                tabindex=""
                 v-model="employeeForm.PhoneNumber"
                 type="text"
+                DataType="Number"
                 FieldName="PhoneNumber"
+                Require="true"
                 class="input-dialog-employee"
+                @blur="handleBlur"
               />
             </div>
           </div>
@@ -174,6 +181,8 @@
                     @bindDataForm="bindDataForm"
                     v-bind:employeeForm="employeeForm.DepartmentId"
                     :Require="true"
+                    @handleBlur="handleBlur"
+                    tabindex="5"
                   />
                 </div>
               </div>
@@ -190,7 +199,7 @@
                 <input
                   id="numSalary"
                   type="number"
-                  class="input-dialog-employee"
+                  class="input-dialog-employee text-align-right"
                   DataType="Number"
                 />
               </div>
@@ -313,10 +322,7 @@ export default {
     employee: function (employeeEdit) {
       let me = this;
       me.employeeForm = employeeEdit;
-      me.employeeForm.DateOfBirth = CommonFn.convertDate(
-        employeeEdit.DateOfBirth
-      );
-      console.log(me.employeeForm);
+      me.employeeForm.DateOfBirth = CommonFn.convertDate(employeeEdit.DateOfBirth);
     },
 
     /* 
@@ -334,6 +340,9 @@ export default {
           CommonFn.Axios(method, url, data, function (response) {
             // gán EmployeeCode lên form (khi thêm mới)
             me.employeeForm.EmployeeCode = response.data;
+            me.$refs.txtEmployeeCode.focus();
+          }, function (error) {
+            me.$emit("validateForm", error.response.data.devMsg);
           });
         } catch (error) {
           console.log(error);
@@ -346,11 +355,12 @@ export default {
   methods: {
     /* 
         Sự kiện click Cancel button
+        CreateBy: Nguyễn Văn Khang 30/03/2022
     */
     handleCancel() {
       let me = this;
       // me.resetForm();
-      me.$emit("handleCloseForm");
+      me.$emit("closeForm");
     },
     /* 
         Sự kiện click Save button
@@ -360,11 +370,11 @@ export default {
       if (me.validateForm() == true) {
         me.$emit("handleSave", me.employeeForm);
       } else {
-        console.log("xay ra loi");
+        console.log("Xảy ra lỗi khi validate form");
       }
     },
 
-    // gói dữ liệu từ input để gửi lên server (POST or PUT)
+    // Lấy dữ liệu combobox 
     bindDataForm({ fieldName, item }) {
       let me = this;
       switch (fieldName) {
@@ -379,15 +389,25 @@ export default {
           break;
       }
     },
+
+    // Reset dữ liệu form
     resetForm() {
-      // let me = this;
-      // me.employeeForm = {};
-      // document.find('#formEmployeeDetail [Require=true]').classList.remove("notValidControl");
-      // document.querySelectorAll('#formEmployeeDetail [DataType=Number]').classList.remove("notValidControl");
-      // document.querySelectorAll('#formEmployeeDetail [DataType=Date]').classList.remove("notValidControl");
-      // document.querySelectorAll('#formEmployeeDetail [DataType=Email]').classList.remove("notValidControl");
+      
     },
 
+    // Sự kiện blur trên input
+    handleBlur(e){
+      let element = e.target;
+      console.log(element)
+      if(element.value == "") {
+        element.classList.add("notValidControl");
+        element.title = "Vui lòng không được để trống"
+      }else {
+        element.classList.remove("notValidControl");
+      }
+    },
+
+    // validate form
     validateForm() {
       let me = this,
         isValid = me.validateRequire(); // Validate các trường bắt buộc nhập
@@ -406,11 +426,11 @@ export default {
       }
       return isValid;
     },
+
     // Validate các trường bắt buộc
     validateRequire() {
       let me = this,
         isValid = true;
-      // Duyệt hết các trường require xem có trường nào bắt buộc mà ko có value ko
       let elements = document.querySelectorAll("[Require='true']");
       elements.forEach((element) => {
         let value = element.value;
@@ -418,15 +438,15 @@ export default {
           isValid = false;
           element.classList.add("notValidControl");
 
-          // show dialog thông báo
+          // Hiển thị dialog thông báo
           me.$emit("validateForm", ValidateForm.Message.notEmpty);
-          
         } else {
           element.classList.remove("notValidControl");
         }
       });
       return isValid;
     },
+
     // Validate các trường Number
     validateFieldNumber() {
       let me = this,
@@ -437,10 +457,9 @@ export default {
         if (isNaN(value)) {
           isValid = false;
           element.classList.add("notValidControl");
-
           element.setAttribute("title", ValidateForm.Message.errFormatNumber);
 
-          // show dialog thông báo
+          // Hiển thị dialog thông báo
           me.$emit("validateForm", ValidateForm.Message.errFormatNumber);
         } else {
           element.classList.remove("notValidControl");
@@ -448,6 +467,7 @@ export default {
       });
       return isValid;
     },
+
     // Validate các trường ngày tháng
     validateFieldDate() {
       let me = this,
@@ -458,8 +478,9 @@ export default {
         if (!ValidateForm.isDateFormat(value)) {
           isValid = false;
           element.classList.add("notValidControl");
-
           element.setAttribute("title", ValidateForm.Message.errFormatDate);
+
+          // Hiển thị dialog thông báo
           me.$emit("validateForm", ValidateForm.Message.errFormatDate);
         } else {
           element.classList.remove("notValidControl");
@@ -467,20 +488,20 @@ export default {
       });
       return isValid;
     },
+
     // Validate các trường email
     validateEmail() {
       let me = this,
         isValid = true;
-      // Duyệt hết các trường require xem có trường nào bắt buộc mà ko có value ko
       let elements = document.querySelectorAll("[DataType='Email']");
       elements.forEach((element) => {
         let value = element.value;
-        // is not email
         if (!ValidateForm.IsEmailFormat(value)) {
           isValid = false;
           element.classList.add("notValidControl");
-
           element.setAttribute("title", ValidateForm.Message.errFormatEmail);
+
+          // Hiển thị dialog thông báo
           me.$emit("validateForm", ValidateForm.Message.errFormatEmail);
         } else {
           element.classList.remove("notValidControl");
@@ -488,13 +509,18 @@ export default {
       });
       return isValid;
     },
+
     // Hàm dùng cho các màn override lại: validate Trùng mã nhân viên hoặc các kiểu validate khác
     validateCustom() {
       return true;
     },
   },
+
+  mounted(){
+    this.$refs.txtEmployeeCode.focus()
+  }
 };
 </script>
-<style>
 
+<style>
 </style>

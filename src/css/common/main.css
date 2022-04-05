@@ -22,7 +22,8 @@
 }
 
 body {
-    font-family: GoogleSans-Regular;
+    /* font-family: GoogleSans-Regular; */
+    font-family: Roboto-Regular;
     font-size: 13px;
 }
 

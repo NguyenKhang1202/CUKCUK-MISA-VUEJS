@@ -6,7 +6,7 @@
       <button
         id="btnAddEmployee"
         class="m-btn m-btn-bg add-icon"
-        @click="onClickAddEmployee"
+        @click="open"
       >
         Thêm nhân viên
       </button>
@@ -166,7 +166,7 @@
       :isShow="form.isShowForm"
       :employee="employeeSelected"
       :formMode="form.formMode"
-      @handleCloseForm="handleCloseForm"
+      @closeForm="closeForm"
       @handleSave="handleSave"
       @validateForm="validateForm"
     />
@@ -215,15 +215,18 @@ export default {
     TheLoading,
     ComboboxComponent,
   },
-  props: {},
+  props: [],
   data() {
     return {
-      // Phục vụ chung
+      /*
+        Phục vụ chung
+        CreateBy : Nguyễn Văn Khang 30/3/2022
+      */
       employees: { type: Object, default: {} },
       employeeSelected: {},
       isShowLoading: { type: Boolean, default: false },
 
-      // Phục vụ cho Form (thêm hoặc sửa)
+      // Phục vụ cho Form nhân viên
       form: {
         isShowForm: false,
         formMode: { type: Number, default: 0 },
@@ -232,7 +235,6 @@ export default {
       // Phục vụ cho Dialog
       dialog: {
         isShowDialog: false,
-        // employeeCode: null,
         title: "",
         message: "",
         isShowBtnCancel: false,
@@ -246,23 +248,19 @@ export default {
 
       // Lấy dữ liệu từ server và build combobox
       departments: Combobox.getDepartment("Employee"),
-
       positions: Combobox.getPosition("Employee"),
-
-      genders: Combobox.getGender("Employee"),
-
-      messageError: "",
     };
   },
 
   methods: {
+    // Các hàm format 
     formatDate: CommonFn.formatDate,
     convertDate: CommonFn.convertDate,
     getValueEnum: CommonFn.getValueEnum,
     formatMoney: CommonFn.formatMoney,
 
-    // Sự kiện click button Thêm nhân viên
-    onClickAddEmployee() {
+    // mở form detail
+    open() {
       let me = this;
       me.form = {
         isShowForm: true,
@@ -271,8 +269,8 @@ export default {
       me.employee = {};
     },
 
-    // Thực hiện ẩn Form
-    handleCloseForm() {
+    // Đóng form detail
+    closeForm() {
       let me = this;
       me.form = {
         isShowForm: false,
@@ -280,13 +278,13 @@ export default {
       };
     },
 
-    // Khởi tạo sự kiện click vào 1 row (table)
+    // Sự kiện select row
     onClickRow(event, employeeSelected) {
       let me = this;
       me.employeeSelected = employeeSelected;
     },
 
-    // Khởi tạo sự kiện double click vào 1 row (table)
+    // Sự kiện double select row
     onDblclickRow() {
       let me = this;
       me.form = {
@@ -295,7 +293,7 @@ export default {
       };
     },
 
-    // Bắt sự kiện click vào button Delete
+    // Sự kiện click button Delete
     onClickDelete() {
       let me = this;
       if (me.employeeSelected.EmployeeCode != undefined) {
@@ -305,7 +303,7 @@ export default {
       }
     },
 
-    // Bắt sự kiện click vào button Edit
+    // Sự kiện click vào button Edit
     onClickEdit() {
       let me = this;
       if (me.employeeSelected.EmployeeCode != undefined) {
@@ -315,7 +313,7 @@ export default {
       }
     },
 
-    // Thực hiện Post or Put dữ liệu từ form lên server
+    // Lưu dữ liệu
     handleSave(employeeForm) {
       var me = this,
         method = null,
@@ -341,16 +339,18 @@ export default {
           me.loadingEmployees();
 
           // Đóng Form
-          me.handleCloseForm();
+          me.closeForm();
 
           // Hiển thị Toast message
           me.showToast(message);
         }
       }, function (error){
+        // hiển thị dialog thông báo lỗi đc gửi từ server
         me.dialog = DialogJS.Warning(error.response.data.devMsg);
       });
     },
 
+    // Hiển thị thông báo lỗi
     validateForm(message) {
       let me = this;
       me.dialog = DialogJS.Warning(message);
@@ -371,7 +371,6 @@ export default {
           me.showToast(Resource.Toast.Delete);
         });
       }
-
       // Đóng dialog delete và reset
       me.handleCloseDialog();
     },
@@ -388,14 +387,15 @@ export default {
       };
     },
 
-    // Đóng toast message khi click btn-close
+    // Đóng toast message
     handleCloseToast() {
       let me = this;
       me.toast = {
         isShowToast: false,
       };
     },
-    // Show toast message và tự đóng sau 3s
+
+    // Hiển thị toast message
     showToast(message) {
       let me = this;
       (me.toast = {
@@ -432,7 +432,7 @@ export default {
       }, 300);
     },
 
-    // Sự kiện click vào 1 ô checkbox
+    // Sự kiện click vào checkbox
     checkboxOnClick(trSelected){
       let tr = $('tbody tr .m-checkbox');
       $.each(tr, (item) => {
@@ -445,12 +445,12 @@ export default {
   },
 
   /* 
-        2. created
-    */
+    2. created
+  */
   created() {
     console.log("Created");
     let me = this;
-    // load dữ liệu lên bảng
+    // Tải dữ liệu lên bảng
     me.loadingEmployees();
   },
 };
@@ -487,10 +487,5 @@ export default {
 
 .refresh-text {
   margin-left: -100px;
-}
-
-
-.summary {
-  
 }
 </style>

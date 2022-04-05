@@ -102,19 +102,6 @@ ValidateForm.validateRequire = () => {
 
     // Hàm dùng cho các màn override lại: validate Trùng mã nhân viên hoặc các kiểu validate khác
     ValidateForm.validateCustom = () => {
-        // let me = this,
-        //     url = `${me.Parent.urlAdd}`,
-        //     method = Resource.Method.Get,
-        //     urlFull = `${Constant.UrlPrefix}${url}`;
-        // CommonFn.Ajax(urlFull, method, data, function(response){
-        //     if(response){
-        //         CommonFn.showToast(method);
-        //         me.cancel();
-        //         me.Parent.getDataServer();
-        //     }else{
-        //         console.log("Có lỗi khi cất dữ liệu");
-        //     }
-        // });
         return true;
     }
 
