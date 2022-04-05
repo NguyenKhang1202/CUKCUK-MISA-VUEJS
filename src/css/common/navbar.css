@@ -80,7 +80,7 @@
                 cursor: pointer;
             }
             .navbar-box.toggle {
-                
+                /* width: 60px; */
             }
             .navbar-box.toggle .toggled {
                 transform: rotate(180deg);

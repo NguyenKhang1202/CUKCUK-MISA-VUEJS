@@ -118,4 +118,11 @@ ValidateForm.validateRequire = () => {
         return true;
     }
 
+    ValidateForm.Message = {
+        errFormatEmail: "Vui lòng nhập đúng định dạng email !",
+        errFormatDate: "Vui lòng nhập đúng định dạng ngày tháng!",
+        errFormatNumber: "Vui lòng nhập đúng định dạng số!",
+        notEmpty: "Vui lòng không được để trống!",
+    }
+
 export default ValidateForm;

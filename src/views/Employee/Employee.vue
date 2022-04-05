@@ -71,7 +71,7 @@
               </div>
             </th>
             <th fieldName="EmployeeCode">Mã nhân viên</th>
-            <th fieldName="EmployeeName" colspan="1">Họ và tên</th>
+            <th fieldName="EmployeeName" colspan="2">Họ và tên</th>
             <th style="width: 50px" fieldName="Gender">Giới tính</th>
             <th class="text-align-center" fieldName="DateOfBirth">Ngày sinh</th>
             <th fieldName="PhoneNumber">Số điện thoại</th>
@@ -81,6 +81,7 @@
             <th class="text-align-right" fieldName="Salary">
               Mức lương cơ bản
             </th>
+            <!-- <th class="text-align-center">Chức năng</th> -->
             <!-- <th>Tình trạng công việc</th> -->
           </tr>
         </thead>
@@ -108,7 +109,7 @@
                 </div>
               </td>
               <td>{{ employee.EmployeeCode }}</td>
-              <td colspan="1">{{ employee.EmployeeName }}</td>
+              <td colspan="2">{{ employee.EmployeeName }}</td>
               <td style="width: 50px">
                 {{ getValueEnum(employee.Gender, "Gender") }}
               </td>
@@ -120,7 +121,18 @@
               <!-- <td></td> -->
               <td colspan="2">{{ employee.DepartmentName }}</td>
               <td class="align-right">{{ formatMoney(1000000) }}</td>
-              <!-- <td></td> -->
+              <!-- <td class="text-align-center action feature">
+                <i
+                @click="rowOnClick(emp)"
+                style="font-size: 17px; color: #138496; margin-right: 10px"
+                class="far fa-edit edit-form-employee"
+              ></i>
+              <i
+                v-on:click="deleteEmployee(emp)"
+                style="font-size: 17px; color: red"
+                class="text-align-center far fa-trash-alt btnDelete"
+              ></i>
+              </td> -->
             </tr>
           </div>
         </tbody>
@@ -128,7 +140,9 @@
       </table>
     </div>
     <!-- end table -->
+    <div class="summary">
 
+    </div>
     <!-- paging bar -->
     <div class="paging-bar">
       <div class="paging-left">Hiển thị 1-10/1000 nhân viên</div>
@@ -185,7 +199,7 @@ import TheDialog from "../../components/base/TheDialog.vue";
 import TheToastMessage from "../../components/base/ToastMessage.vue";
 import CommonFn from "../../js/Common/Common.js";
 import Combobox from "../../js/Components/Combobox.js";
-import Dialog from "../../js/Components/Dialog.js";
+import DialogJS from "../../js/Components/Dialog.js";
 import Resource from "../../js/Common/Resource";
 import Constant from "../../js/Common/Constant";
 import Enumeration from "../../js/Common/Enumeration";
@@ -218,7 +232,7 @@ export default {
       // Phục vụ cho Dialog
       dialog: {
         isShowDialog: false,
-        employeeCode: null,
+        // employeeCode: null,
         title: "",
         message: "",
         isShowBtnCancel: false,
@@ -268,19 +282,6 @@ export default {
 
     // Khởi tạo sự kiện click vào 1 row (table)
     onClickRow(event, employeeSelected) {
-      // let inputs = document.querySelectorAll("input[type=checkbox]");
-      // inputs.forEach(function (input) {
-      //   input.checked = false;
-      // });
-      // event.target.parentElement.getElementsByTagName(
-      //   "input"
-      // )[0].checked = true;
-      // let tr = $('tbody tr .m-checkbox');
-      // $.each(tr, (item) => {
-      //   if($(item).hasClass('checked')){
-      //     $(item).removeClass('checked');
-      //   }
-      // })
       let me = this;
       me.employeeSelected = employeeSelected;
     },
@@ -298,13 +299,7 @@ export default {
     onClickDelete() {
       let me = this;
       if (me.employeeSelected.EmployeeCode != undefined) {
-        me.dialog = {
-          isShowDialog: true,
-          employeeCode: me.employeeSelected.EmployeeCode + "?",
-          title: Dialog.Delete.title,
-          message: Dialog.Delete.message,
-          isShowBtnCancel: true,
-        };
+        me.dialog = DialogJS.Delete(me.employeeSelected.EmployeeCode);
       } else {
         console.log("Chưa chọn employee nào");
       }
@@ -351,18 +346,14 @@ export default {
           // Hiển thị Toast message
           me.showToast(message);
         }
+      }, function (error){
+        me.dialog = DialogJS.Warning(error.response.data.devMsg);
       });
     },
 
-    validateForm(dialog) {
+    validateForm(message) {
       let me = this;
-      me.dialog = {
-        isShowDialog: dialog.isShowDialog,
-        employeeCode: "",
-        title: dialog.title,
-        message: dialog.message,
-        isShowBtnCancel: false,
-      };
+      me.dialog = DialogJS.Warning(message);
     },
 
     // Hàm xử lý sự kiện click CONFIRM DELETE button
@@ -390,7 +381,7 @@ export default {
       let me = this;
       me.dialog = {
         isShowDialog: false,
-        employeeCode: null,
+        //employeeCode: null,
         isShowBtnCancel: false,
         title: "",
         message: "",
@@ -496,5 +487,10 @@ export default {
 
 .refresh-text {
   margin-left: -100px;
+}
+
+
+.summary {
+  
 }
 </style>

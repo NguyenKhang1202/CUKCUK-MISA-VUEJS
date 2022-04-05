@@ -257,7 +257,6 @@ import Combobox from "../../js/Components/Combobox";
 import ValidateForm from "../../js/Validate/ValidateForm";
 import Enumeration from "../../js/Common/Enumeration";
 import ComboboxComponent from "../../components/base/Combobox.vue";
-import Dialog from "../../js/Components/Dialog";
 
 export default {
   name: "EmployeeDetail",
@@ -392,6 +391,7 @@ export default {
     validateForm() {
       let me = this,
         isValid = me.validateRequire(); // Validate các trường bắt buộc nhập
+
       if (isValid) {
         isValid = me.validateFieldNumber(); // Validate các trường nhập  số
       }
@@ -417,16 +417,10 @@ export default {
         if (!value) {
           isValid = false;
           element.classList.add("notValidControl");
-          console.log("xay ra loi tai validateRequire");
 
-          // element.attr("title", "Vui lòng không được để trống!");
           // show dialog thông báo
-          me.$emit("validateForm", {
-            title: "THÔNG BÁO",
-            message: "Vui lòng không được để trống!",
-            isShowBtnCancel: false,
-            isShowDialog: true,
-          });
+          me.$emit("validateForm", ValidateForm.Message.notEmpty);
+          
         } else {
           element.classList.remove("notValidControl");
         }
@@ -443,14 +437,11 @@ export default {
         if (isNaN(value)) {
           isValid = false;
           element.classList.add("notValidControl");
-          // CommonFn.showDialogMsg("Vui lòng không được để trống!");
-          element.setAttribute("title", "Vui lòng nhập đúng định dạng số!");
-          me.$emit("validateForm", {
-            title: "THÔNG BÁO",
-            message: "Vui lòng nhập đúng định dạng số!",
-            isShowBtnCancel: false,
-            isShowDialog: true,
-          });
+
+          element.setAttribute("title", ValidateForm.Message.errFormatNumber);
+
+          // show dialog thông báo
+          me.$emit("validateForm", ValidateForm.Message.errFormatNumber);
         } else {
           element.classList.remove("notValidControl");
         }
@@ -465,18 +456,11 @@ export default {
       elements.forEach((element) => {
         let value = element.value;
         if (!ValidateForm.isDateFormat(value)) {
-          console.log("xay ra loi tai validateFieldDate");
-
           isValid = false;
           element.classList.add("notValidControl");
-          // CommonFn.showDialogMsg("Vui lòng không được để trống!");
-          element.setAttribute("title", "Vui lòng nhập đúng định dạng ngày tháng!");
-          me.$emit("validateForm", {
-            title: "THÔNG BÁO",
-            message: "Vui lòng nhập đúng định dạng ngày tháng!",
-            isShowBtnCancel: false,
-            isShowDialog: true,
-          });
+
+          element.setAttribute("title", ValidateForm.Message.errFormatDate);
+          me.$emit("validateForm", ValidateForm.Message.errFormatDate);
         } else {
           element.classList.remove("notValidControl");
         }
@@ -495,16 +479,9 @@ export default {
         if (!ValidateForm.IsEmailFormat(value)) {
           isValid = false;
           element.classList.add("notValidControl");
-          // CommonFn.showDialogMsg("Vui lòng nhập đúng định dạng Email !");
-          console.log("xay ra loi tai validateEmail");
 
-          element.setAttribute("title", "Vui lòng nhập đúng định dạng email !");
-          me.$emit("validateForm", {
-            title: "THÔNG BÁO",
-            message: "Vui lòng nhập đúng định dạng email !",
-            isShowBtnCancel: false,
-            isShowDialog: true,
-          });
+          element.setAttribute("title", ValidateForm.Message.errFormatEmail);
+          me.$emit("validateForm", ValidateForm.Message.errFormatEmail);
         } else {
           element.classList.remove("notValidControl");
         }
@@ -513,17 +490,7 @@ export default {
     },
     // Hàm dùng cho các màn override lại: validate Trùng mã nhân viên hoặc các kiểu validate khác
     validateCustom() {
-      let me = this;
-      if(CommonFn.devMsg == ""){
-        return true;
-      }else {
-          me.$emit("validateForm", {
-            title: "THÔNG BÁO",
-            message: CommonFn.devMsg,
-            isShowBtnCancel: false,
-            isShowDialog: true,
-          });
-      }
+      return true;
     },
   },
 };

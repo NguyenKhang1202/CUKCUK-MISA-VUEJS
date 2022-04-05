@@ -69,7 +69,7 @@ CommonFn.IsEmailFormat = (email) => {
 }
 
 // Hàm axios gọi lên server lấy dữ liệu
-CommonFn.Axios = (method,url,data, fnCallBack) => {
+CommonFn.Axios = (method,url,data, fnCallBack, errCallback) => {
     CommonFn.devMsg = "";
     try {
         axios({
@@ -82,13 +82,13 @@ CommonFn.Axios = (method,url,data, fnCallBack) => {
             fnCallBack(response);
         })
         .catch(function(err) {
-            console.log(err);
+            errCallback(err);
+            console.error(err);
         });
     } catch (error) {
         console.log("Xảy ra lỗi tại Axios");
         console.log(error);
     }
-    console.log(CommonFn.devMsg);
 }
 
 export default CommonFn;
