@@ -1,5 +1,4 @@
 # web02-cukcuk-vue
-Xây dựng website quản lý tài sản
 
 ## Project setup
 ```
